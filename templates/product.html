@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} - TechStore{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-md-6">
+        <img src="{{ url_for('static', filename='images/' + product.image) }}" 
+             class="img-fluid rounded product-detail-image" alt="{{ product.name }}">
+    </div>
+    <div class="col-md-6">
+        <h1>{{ product.name }}</h1>
+        <p class="text-muted">Category: {{ product.category }}</p>
+        <h3 class="my-4">${{ "%.2f"|format(product.price) }}</h3>
+        
+        <p>{{ product.description }}</p>
+        
+        <div class="d-flex align-items-center mb-3">
+            <span class="badge bg-{{ 'success' if product.stock > 0 else 'danger' }}">
+                {{ product.stock }} {{ 'in stock' if product.stock > 0 else 'out of stock' }}
+            </span>
+        </div>
+        
+        {% if product.stock > 0 %}
+        <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="post" class="row g-3">
+            <div class="col-auto">
+                <label for="quantity" class="form-label">Quantity</label>
+                <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ product.stock }}" 
+                       class="form-control" title="Enter quantity" placeholder="Enter quantity">
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">
+                    Add to Cart
+                </button>
+            </div>
+        </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
